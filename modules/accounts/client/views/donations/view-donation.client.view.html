@@ -1,0 +1,27 @@
+<section ng-controller="DonationsController" ng-init="findOne()">
+  <div class="page-header">
+    <h1 ng-bind="donation.title"></h1>
+  </div>
+  <div class="pull-right" ng-show="authentication.user.id == donation.user.id || (authentication.user.roles.indexOf('admin') && authentication.user.roles.indexOf('admin') != -1) ">
+    <a class="btn btn-primary" ui-sref="donations.edit({donationId: donation.id})">
+      <i class="glyphicon glyphicon-edit"></i>
+    </a>
+    <a class="btn btn-primary" ng-click="remove(donation);">
+      <i class="glyphicon glyphicon-trash"></i>
+    </a>
+  </div>
+  <small>
+    <em class="text-muted">
+      Posted on
+      <span ng-bind="donation.created | date:'mediumDate'"></span>
+      by
+      <span ng-bind="donation.user.username"></span>
+    </em>
+  </small>
+  <p class="lead" ng-bind="donation.name"></p>
+  <p class="lead" ng-bind="donation.donationType"></p>
+  <p class="lead" ng-bind="donation.address"></p>
+  <p class="lead" ng-bind="donation.phoneNumber"></p>
+  <p class="lead" ng-bind="donation.faxNumber"></p>
+  <p class="lead" ng-bind="donation.emailAddress"></p>
+</section>

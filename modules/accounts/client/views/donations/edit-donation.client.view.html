@@ -1,0 +1,56 @@
+<section ng-controller="DonationsController" ng-init="findOne()">
+  <div class="page-header">
+    <h1>Edit Donation</h1>
+  </div>
+  <div class="col-md-12">
+    <form name="donationForm" class="form-horizontal" ng-submit="update(donationForm.$valid)" novalidate>
+      <fieldset>
+        <div class="form-group" show-errors>
+          <label for="name">Name</label>
+          <input name="name" type="text" ng-model="donation.name" id="name" class="form-control" placeholder="Name" required>
+          <div ng-messages="donationForm.name.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Donation name is required.</p>
+          </div>
+        </div>
+        <div class="form-group" show-errors>
+          <label for="donationType">Donation Type</label>
+          <select name="donationType" ng-model="donation.donationType" id="donationType">
+            <option value="donor">Donor</option>
+            <option value="consumer">Consumer</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="address">Address</label>
+          <input name="address" type="text" ng-model="donation.address" id="address" class="form-control" placeholder="Address" required></input>
+          <div ng-messages="donationForm.address.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Address is required.</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="phoneNumber">Phone Number</label>
+          <input name="phoneNumber" type="text" ng-model="donation.phoneNumber" id="phoneNumber" class="form-control" placeholder="Phone Number" required></input>
+          <div ng-messages="donationForm.phoneNumber.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Phone Number is required.</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="faxNumber">Fax Number</label>
+          <input name="faxNumber" type="text" ng-model="donation.faxNumber" id="faxNumber" class="form-control" placeholder="Fax Number"></input>
+        </div>
+        <div class="form-group">
+          <label for="emailAddress">Email Address</label>
+          <input name="emailAddress" type="text" ng-model="donation.emailAddress" id="emailAddress" class="form-control" placeholder="Email Address" required></input>
+          <div ng-messages="donationForm.emailAddress.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Email Address is required.</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <input type="submit" value="Update" class="btn btn-default">
+        </div>
+        <div ng-show="error" class="text-center alert alert-danger">
+          <strong ng-bind="error"></strong>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</section>

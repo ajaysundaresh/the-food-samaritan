@@ -1,5 +1,12 @@
 'use strict';
 
+// User Authentication for MySQL, MariaDB, SQLite and MSSQL database dialects 
+
+/** 
+* File Path: /modules/users/server/controllers/users/user.authentication.server.controller.js
+* File version: 0.1
+*/
+
 /**
  * Module dependencies.
  */
@@ -147,18 +154,15 @@ exports.saveOAuthUserProfile = function(req, providerUserProfile, done) {
         email: providerUserProfile.email
       }
     }).then(function(user) {
-
       if (user) {
 
-        // Add the provider data to the additional provider data field
-        if (!user.additionalProvidersData) {
-          user.additionalProvidersData = {};
-        }
-
-        user.additionalProvidersData[providerUserProfile.provider] = providerUserProfile.providerData;
-
-        // Notify sequelize for update
-        user.set('additionalProvidersData', user.additionalProvidersData);
+        //Update their info
+        user.firstName = providerUserProfile.firstName;
+        user.lastName = providerUserProfile.lastName;
+        user.displayName = providerUserProfile.displayName;
+        user.profileImageURL = providerUserProfile.profileImageURL;
+        user.provider = providerUserProfile.provider;
+        user.providerData = JSON.stringify(providerUserProfile.providerData);
 
         // And save the user
         user.save().then(function() {
@@ -168,28 +172,22 @@ exports.saveOAuthUserProfile = function(req, providerUserProfile, done) {
             return done(false, user);
           });
         }).catch(function(err) {
-          return done(new Error(err));
+          return done(false, err);
         });
 
       } else {
 
         // Define a search query fields
-        var searchMainProviderIdentifierField = 'providerData.' + providerUserProfile.providerIdentifierField;
+        var searchMainProviderIdentifierField = providerUserProfile.provider + "UserId";
 
         // Define main provider search query
         var mainProviderSearchQuery = {};
         mainProviderSearchQuery.provider = providerUserProfile.provider;
         mainProviderSearchQuery[searchMainProviderIdentifierField] = providerUserProfile.providerData[providerUserProfile.providerIdentifierField];
 
-        // Define additional provider search query
-        var searchAdditionalProviderIdentifierField = 'additionalProvidersData.' + providerUserProfile.provider + '.' + providerUserProfile.providerIdentifierField;
-
-        var additionalProviderSearchQuery = {};
-        additionalProviderSearchQuery[searchAdditionalProviderIdentifierField] = providerUserProfile.providerData[providerUserProfile.providerIdentifierField];
-
         User.find({
           where: {
-            $or: [mainProviderSearchQuery, additionalProviderSearchQuery],
+            $or: [mainProviderSearchQuery],
           }
         }).then(function(user) {
           //The user already have the providerIdentifierField
@@ -253,7 +251,7 @@ exports.saveOAuthUserProfile = function(req, providerUserProfile, done) {
                 user.displayName = providerUserProfile.displayName;
 
                 user.provider = providerUserProfile.provider;
-                user.providerData = providerUserProfile.providerData;
+                user.providerData = JSON.stringify(providerUserProfile.providerData);
 
                 user.save().then(function() {
                   //Login the user
@@ -268,6 +266,7 @@ exports.saveOAuthUserProfile = function(req, providerUserProfile, done) {
                 });
 
               });
+
 
           } else {
             //New user
@@ -323,7 +322,21 @@ exports.saveOAuthUserProfile = function(req, providerUserProfile, done) {
                   newUser.displayName = providerUserProfile.displayName;
                   newUser.email = providerUserProfile.email;
                   newUser.provider = providerUserProfile.provider;
-                  newUser.providerData = providerUserProfile.providerData;
+                  newUser.providerData = JSON.stringify(providerUserProfile.providerData);
+
+                  if (providerUserProfile.provider === 'facebook') {
+                    newUser.facebookUserId = providerUserProfile.providerData.id;
+                  } else if (providerUserProfile.provider === 'twitter') {
+                    newUser.twitterUserId = providerUserProfile.providerData.id;
+                  } else if (providerUserProfile.provider === 'github') {
+                    newUser.githubUserId = providerUserProfile.providerData.id;
+                  } else if (providerUserProfile.provider === 'linkedin') {
+                    newUser.linkedinUserId = providerUserProfile.providerData.id;
+                  } else if (providerUserProfile.provider === 'paypal') {
+                    newUser.paypalUserId = providerUserProfile.providerData.user_id;
+                  } else if (providerUserProfile.provider === 'google') {
+                    newUser.googleUserId = providerUserProfile.providerData.id;
+                  }
 
                   //Create the user
                   User.create(newUser).then(function(user) {
@@ -352,6 +365,8 @@ exports.saveOAuthUserProfile = function(req, providerUserProfile, done) {
 
       }
 
+    }).catch(function(err) {
+      return done(false, err);
     });
   } else {
     // User is already logged in, join the provider data to the existing user
@@ -366,14 +381,27 @@ exports.saveOAuthUserProfile = function(req, providerUserProfile, done) {
 
       user.additionalProvidersData[providerUserProfile.provider] = providerUserProfile.providerData;
 
-      // Notify sequelize for update
-      user.set('additionalProvidersData', user.additionalProvidersData);
+      user.additionalProvidersData = JSON.stringify(user.additionalProvidersData);
+
+      if (providerUserProfile.provider === 'facebook') {
+        user.facebookUserId = providerUserProfile.providerData.id;
+      } else if (providerUserProfile.provider === 'twitter') {
+        user.twitterUserId = providerUserProfile.providerData.id;
+      } else if (providerUserProfile.provider === 'github') {
+        user.githubUserId = providerUserProfile.providerData.id;
+      } else if (providerUserProfile.provider === 'linkedin') {
+        user.linkedinUserId = providerUserProfile.providerData.id;
+      } else if (providerUserProfile.provider === 'paypal') {
+        user.paypalUserId = providerUserProfile.providerData.user_id;
+      } else if (providerUserProfile.provider === 'google') {
+        user.googleUserId = providerUserProfile.providerData.id;
+      }
 
       // And save the user
       user.save().then(function(saved) {
         return done((!saved) ? true : false, user, '/settings/accounts');
       }).catch(function(error) {
-        return done(new Error(error), user);
+        return done(false, error);
       });
 
     } else {
@@ -400,17 +428,13 @@ exports.removeOAuthProvider = function(req, res, next) {
   // Delete the additional provider
   if (user.additionalProvidersData[provider]) {
     delete user.additionalProvidersData[provider];
-
-    // Notify sequelize for update
-    user.set('additionalProvidersData', user.additionalProvidersData);
+    user.additionalProvidersData = JSON.stringify(user.additionalProvidersData);
   }
 
   user.save().then(function(user) {
     req.login(user, function(err) {
       if (err) {
-        return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
-        });
+        return res.status(400).send(err);
       } else {
         return res.json(user);
       }
@@ -420,6 +444,7 @@ exports.removeOAuthProvider = function(req, res, next) {
       message: errorHandler.getErrorMessage(err)
     });
   });
+
 };
 
 var getFileExt = function(fileName) {

@@ -1,0 +1,21 @@
+<section ng-controller="DonationsController" ng-init="find()">
+  <div class="page-header">
+    <h1>Donations</h1>
+  </div>
+  <div class="list-group">
+    <a ng-repeat="donation in donations" ui-sref="donations.view({donationId: donation.id})" class="list-group-item">
+      <small class="list-group-item-text">
+        Posted on
+        <span ng-bind="donation.created | date:'mediumDate'"></span>
+        by
+        <span ng-bind="donation.user.username"></span>
+      </small>
+      <h4 class="list-group-item-heading" ng-bind="donation.title"></h4>
+      <p class="list-group-item-text" ng-bind="donation.content"></p>
+      <p class="list-group-item-text" ng-bind="donation.phoneNumber"></p>
+    </a>
+  </div>
+  <div class="alert alert-warning text-center" ng-if="!donations.length">
+    No donations yet, why don't you <a ui-sref="donations.create">create one</a>?
+  </div>
+</section>

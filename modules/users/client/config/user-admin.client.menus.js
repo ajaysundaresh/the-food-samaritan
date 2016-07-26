@@ -1,6 +1,6 @@
 'use strict';
 
-// Configuring the Articles module
+// Configuring the Accounts module
 angular.module('user.admin').run(['Menus',
   function(Menus) {
     Menus.addSubMenuItem('topbar', 'admin', {

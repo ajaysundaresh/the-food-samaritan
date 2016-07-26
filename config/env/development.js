@@ -3,20 +3,16 @@
 var defaultEnvConfig = require('./default');
 
 module.exports = {
-  secure: {
-    ssl: Boolean(process.env.ssl) || false,
-    privateKey: './config/sslcerts/key.pem',
-    certificate: './config/sslcerts/cert.pem'
-  },
   db: {
-    name: process.env.DB_NAME || "seanjs_dev",
-    host: process.env.DB_HOST || "localhost",
-    port: process.env.DB_PORT || 5432,
-    username: process.env.DB_USERNAME || "postgres",
-    password: process.env.DB_PASSWORD || "postgres",
-    dialect: process.env.DB_DIALECT || "postgres", //mysql, postgres, sqlite3,...
+    name: process.env.DB_NAME || "FoodDiversion",
+    host: process.env.DB_HOST || "wtojf150w1.database.windows.net",
+    // port: process.env.DB_PORT || 5432,
+    username: process.env.DB_USERNAME || "FoodDiversionAdmin",
+    password: process.env.DB_PASSWORD || "P@ssW0rd",
+    dialect: process.env.DB_DIALECT || "mssql",
     enableSequelizeLog: process.env.DB_LOG || false,
     ssl: process.env.DB_SSL || false,
+    encrypt: process.env.DB_ENCRYPT || true,
     sync: process.env.DB_SYNC || true //Synchronizing any model changes with database
   },
   redis: {
@@ -78,5 +74,5 @@ module.exports = {
       }
     }
   },
-  livereload: true
+  livereload: false
 };

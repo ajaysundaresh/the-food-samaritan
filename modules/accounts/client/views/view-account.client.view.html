@@ -1,0 +1,27 @@
+<section ng-controller="AccountsController" ng-init="findOne()">
+  <div class="page-header">
+    <h1 ng-bind="account.title"></h1>
+  </div>
+  <div class="pull-right" ng-show="authentication.user.id == account.user.id || (authentication.user.roles.indexOf('admin') && authentication.user.roles.indexOf('admin') != -1) ">
+    <a class="btn btn-primary" ui-sref="accounts.edit({accountId: account.id})">
+      <i class="glyphicon glyphicon-edit"></i>
+    </a>
+    <a class="btn btn-primary" ng-click="remove(account);">
+      <i class="glyphicon glyphicon-trash"></i>
+    </a>
+  </div>
+  <small>
+    <em class="text-muted">
+      Posted on
+      <span ng-bind="account.created | date:'mediumDate'"></span>
+      by
+      <span ng-bind="account.user.username"></span>
+    </em>
+  </small>
+  <p class="lead" ng-bind="account.name"></p>
+  <p class="lead" ng-bind="account.accountType"></p>
+  <p class="lead" ng-bind="account.address"></p>
+  <p class="lead" ng-bind="account.phoneNumber"></p>
+  <p class="lead" ng-bind="account.faxNumber"></p>
+  <p class="lead" ng-bind="account.emailAddress"></p>
+</section>
