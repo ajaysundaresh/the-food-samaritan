@@ -1,0 +1,21 @@
+<section ng-controller="ProductsController" ng-init="find()">
+  <div class="page-header">
+    <h1>Products</h1>
+  </div>
+  <div class="list-group">
+    <a ng-repeat="product in products" ui-sref="products.view({productId: product.id})" class="list-group-item">
+      <small class="list-group-item-text">
+        Posted on
+        <span ng-bind="product.created | date:'mediumDate'"></span>
+        by
+        <span ng-bind="product.user.username"></span>
+      </small>
+      <h4 class="list-group-item-heading" ng-bind="product.name"></h4>
+      <h5 class="list-group-item-heading" ng-bind="product.productType"></h5>
+      <h6 class="list-group-item-heading" ng-bind="product.unit"></h6>
+    </a>
+  </div>
+  <div class="alert alert-warning text-center" ng-if="!products.length">
+    No products yet, why don't you <a ui-sref="products.create">create one</a>?
+  </div>
+</section>

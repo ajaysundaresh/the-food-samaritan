@@ -20,10 +20,16 @@ module.exports = function (sequelize, DataTypes) {
     endDate: {
       type: DataTypes.DATE,
       allowNull: true
+    },
+    count: {
+      type: DataTypes.INTEGER,
+      allowNull: false
     }
   }, {
       associate: function (models) {
         Donation.belongsTo(models.account);
+        Donation.belongsTo(models.user);
+        Donation.belongsTo(models.product);
       }
     });
   return Donation;

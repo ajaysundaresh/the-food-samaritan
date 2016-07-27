@@ -1,0 +1,38 @@
+<section ng-controller="ProductsController">
+  <div class="page-header">
+    <h1>New Product</h1>
+  </div>
+  <div class="col-md-12">
+    <form name="productForm" class="form-horizontal" ng-submit="create(productForm.$valid)" novalidate>
+      <fieldset>
+        <div class="form-group" show-errors>
+          <label for="name">Name</label>
+          <input name="name" type="text" ng-model="name" id="name" class="form-control" placeholder="Name" required>
+          <div ng-messages="productForm.name.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Product name is required.</p>
+          </div>
+        </div>
+        <div class="form-group" show-errors>
+          <label for="productType">Product Type</label>
+          <input name="productType" type="text" ng-model="productType" id="productType" class="form-control" placeholder="Product Type" required>
+          <div ng-messages="productForm.productType.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Product type is required.</p>
+          </div>
+        </div>
+        <div class="form-group" show-errors>
+          <label for="unit">Unit</label>
+          <input name="unit" type="text" ng-model="unit" id="unit" class="form-control" placeholder="Unit" required>
+          <div ng-messages="productForm.unit.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Product unit is required.</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <input type="submit" class="btn btn-default">
+        </div>
+        <div ng-show="error" class="text-center alert alert-danger">
+          <strong ng-bind="error"></strong>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</section>

@@ -10,9 +10,7 @@
         by
         <span ng-bind="donation.user.username"></span>
       </small>
-      <h4 class="list-group-item-heading" ng-bind="donation.title"></h4>
-      <p class="list-group-item-text" ng-bind="donation.content"></p>
-      <p class="list-group-item-text" ng-bind="donation.phoneNumber"></p>
+      <h4 class="list-group-item-heading" ng-bind="donation.description"></h4>
     </a>
   </div>
   <div class="alert alert-warning text-center" ng-if="!donations.length">

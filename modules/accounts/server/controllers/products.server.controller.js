@@ -6,21 +6,21 @@
 var path = require('path'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   db = require(path.resolve('./config/lib/sequelize')).models,
-  Donation = db.donation;
+  Product = db.product;
 
 /**
- * Create a donation
+ * Create a product
  */
 exports.create = function(req, res) {
   req.body.userId = req.user.id;
   
-  Donation.create(req.body).then(function(donation) {
-    if (!donation) {
+  Product.create(req.body).then(function(product) {
+    if (!product) {
       return res.send('users/signup', {
-        errors: 'Could not create the donation'
+        errors: 'Could not create the product'
       });
     } else {
-      return res.jsonp(donation);
+      return res.jsonp(product);
     }
   }).catch(function(err) {
     return res.status(400).send({
@@ -30,27 +30,27 @@ exports.create = function(req, res) {
 };
 
 /**
- * Show the current donation
+ * Show the current product
  */
 exports.read = function(req, res) {
-  res.json(req.donation);
+  res.json(req.product);
 };
 
 /**
- * Update a donation
+ * Update a product
  */
 exports.update = function(req, res) {
-  var donation = req.donation;
+  var product = req.product;
 
-  donation.updateAttributes({
-    description: req.body.description,
-    accountId: req.body.accountId,
-    startDate: req.body.startDate,
-    endDate: req.body.endDate,
-    productId: req.body.productId,
-    count: req.body.count
-  }).then(function(donation) {
-    res.json(donation);
+  product.updateAttributes({
+    name: req.body.name,
+    productType: req.body.productType,
+    address: req.body.address,
+    phoneNumber: req.body.phoneNumber,
+    faxNumber: req.body.faxNumber,
+    emailAddress: req.body.emailAddress
+  }).then(function(product) {
+    res.json(product);
   }).catch(function(err) {
     return res.status(400).send({
       message: errorHandler.getErrorMessage(err)
@@ -59,18 +59,18 @@ exports.update = function(req, res) {
 };
 
 /**
- * Delete an donation
+ * Delete an product
  */
 exports.delete = function(req, res) {
-  var donation = req.donation;
+  var product = req.product;
 
-  // Find the donation
-  Donation.findById(donation.id).then(function(donation) {
-    if (donation) {
+  // Find the product
+  Product.findById(product.id).then(function(product) {
+    if (product) {
 
-      // Delete the donation
-      donation.destroy().then(function() {
-        return res.json(donation);
+      // Delete the product
+      product.destroy().then(function() {
+        return res.json(product);
       }).catch(function(err) {
         return res.status(400).send({
           message: errorHandler.getErrorMessage(err)
@@ -79,7 +79,7 @@ exports.delete = function(req, res) {
 
     } else {
       return res.status(400).send({
-        message: 'Unable to find the donation'
+        message: 'Unable to find the product'
       });
     }
   }).catch(function(err) {
@@ -91,18 +91,18 @@ exports.delete = function(req, res) {
 };
 
 /**
- * List of Donations
+ * List of Products
  */
 exports.list = function(req, res) {
-  Donation.findAll({
+  Product.findAll({
     include: [db.user]
-  }).then(function(donations) {
-    if (!donations) {
+  }).then(function(products) {
+    if (!products) {
       return res.status(404).send({
-        message: 'No donations found'
+        message: 'No products found'
       });
     } else {
-      res.json(donations);
+      res.json(products);
     }
   }).catch(function(err) {
     res.jsonp(err);
@@ -110,30 +110,30 @@ exports.list = function(req, res) {
 };
 
 /**
- * Donation middleware
+ * Product middleware
  */
-exports.donationByID = function(req, res, next, id) {
+exports.productByID = function(req, res, next, id) {
 
   if ((id % 1 === 0) === false) { //check if it's integer
     return res.status(404).send({
-      message: 'Donation is invalid'
+      message: 'Product is invalid'
     });
   }
 
-  Donation.find({
+  Product.find({
     where: {
       id: id
     },
     include: [{
       model: db.user
     }]
-  }).then(function(donation) {
-    if (!donation) {
+  }).then(function(product) {
+    if (!product) {
       return res.status(404).send({
-        message: 'No donation with that identifier has been found'
+        message: 'No product with that identifier has been found'
       });
     } else {
-      req.donation = donation;
+      req.product = product;
       next();
     }
   }).catch(function(err) {

@@ -16,6 +16,7 @@ module.exports = function(app) {
     .get(donations.list)
     .post(donations.create);
 
+
   // Single donation routes
   app.route('/api/donations/:donationId')
     .all(donationsPolicy.isAllowed)

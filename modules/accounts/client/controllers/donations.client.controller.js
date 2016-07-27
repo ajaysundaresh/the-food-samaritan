@@ -20,7 +20,9 @@ angular.module('donations').controller('DonationsController', ['$scope', '$state
         description: this.description,
         startDate: this.startDate,
         endDate: this.endDate,
-        accountId: 1234
+        accountId: this.accountId,
+        productId: this.productId,
+        count: this.count
       });
 
       // Redirect after save

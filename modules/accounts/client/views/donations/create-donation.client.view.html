@@ -6,8 +6,15 @@
     <form name="donationForm" class="form-horizontal" ng-submit="create(donationForm.$valid)" novalidate>
       <fieldset>
         <div class="form-group" show-errors>
+          <label for="Account">Donor Account</label>
+          <select ng-controller="AccountsController" ng-model="$parent.accountId" value="" ng-init="find()">
+            <option ng-repeat="account in accounts | filter:{ accountType: 'donor' }" value="{{account.id}}">{{account.name}}</option>
+          </select>
+        </div>
+        <div class="form-group" show-errors>
           <label for="description">Description</label>
-          <input name="description" type="text" ng-model="description" id="description" class="form-control" placeholder="Description" required>
+          <input name="description" type="text" ng-model="description" id="description" class="form-control" placeholder="Description"
+            required>
           <div ng-messages="donationForm.description.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Donation description is required.</p>
           </div>
@@ -27,10 +34,17 @@
           </div>
         </div>
         <div class="form-group" show-errors>
-          <label for="Account">Account</label>
-          <select ng-controller="AccountsController" ng-model="accountId" ng-init="find()" >
-            <option ng-repeat="account in accounts" value="{{account.id}}">{{account.name}}</option>
+          <label for="Product">Product</label>
+          <select ng-controller="ProductsController" ng-model="$parent.productId" value="" ng-init="find()">
+            <option ng-repeat="product in products" value="{{product.id}}">{{product.name}}</option>
           </select>
+        </div>
+        <div class="form-group" show-errors>
+          <label for="count">Count</label>
+          <input name="count" type="text" ng-model="count" id="count" class="form-control" placeholder="count" required>
+          <div ng-messages="donationForm.count.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Donation count is required.</p>
+          </div>
         </div>
         <div class="form-group">
           <input type="submit" class="btn btn-default">
